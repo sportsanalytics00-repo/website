@@ -3,6 +3,36 @@
 
 <html lang="en-US">
 <head>
+  <script>
+    (function () {
+      const desiredTitle = "Proper"; // put your final title here
+
+      // Get the original descriptor for document.title
+      const proto = Document.prototype || HTMLDocument.prototype;
+      const original = Object.getOwnPropertyDescriptor(proto, "title");
+
+      if (!original || !original.configurable) {
+        // Fallback: just set the title
+        document.title = desiredTitle;
+        return;
+      }
+
+      Object.defineProperty(document, "title", {
+        configurable: true,
+        enumerable: true,
+        get: function () {
+          return desiredTitle;
+        },
+        set: function () {
+          // Ignore whatever Framer tries to set and keep our title
+          original.set.call(this, desiredTitle);
+        }
+      });
+
+      // Ensure it’s set immediately
+      document.title = desiredTitle;
+    })();
+  </script>
   <style>
   /* Hide the Framer Edit Button */
   #__framer-badge-container {
