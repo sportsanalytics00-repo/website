@@ -3,6 +3,31 @@
 
 <html lang="en-US">
 <head>
+    <script>
+    (function () {
+      const desiredTitle = "proper.bet – The thinking workspace for prop bettors";
+
+      const proto = Document.prototype || HTMLDocument.prototype;
+      const original = Object.getOwnPropertyDescriptor(proto, "title");
+      if (!original || !original.configurable) {
+        document.title = desiredTitle;
+        return;
+      }
+
+      Object.defineProperty(document, "title", {
+        configurable: true,
+        enumerable: true,
+        get: function () {
+          return desiredTitle;
+        },
+        set: function () {
+          original.set.call(this, desiredTitle);
+        }
+      });
+
+      document.title = desiredTitle;
+    })();
+  </script>
     <meta charset="utf-8">
     
     
@@ -269,4 +294,5 @@
     
 </body>
 </html>
+
 
